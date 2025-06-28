@@ -14,6 +14,18 @@ const BookYogaClass = () => {
   const [instructors, setInstructors] = useState([]);
   const [message, setMessage] = useState('');
 
+  // Time picker dropdown states
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
+  const [ampm, setAmpm] = useState('');
+
+  // Combine time dropdown values into one string
+  useEffect(() => {
+    if (hour && minute && ampm) {
+      setFormData(prev => ({ ...prev, time: `${hour}:${minute} ${ampm}` }));
+    }
+  }, [hour, minute, ampm]);
+
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
@@ -35,9 +47,7 @@ const BookYogaClass = () => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post('http://localhost:5000/api/yoga/book', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setMessage(res.data.message);
     } catch (err) {
@@ -94,14 +104,30 @@ const BookYogaClass = () => {
           style={inputStyle}
         /><br /><br />
 
-        <input
-          type="time"
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        /><br /><br />
+        {/* ⏰ Time Picker using Dropdowns only */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+          <select value={hour} onChange={(e) => setHour(e.target.value)} required>
+            <option value="">HH</option>
+            {[...Array(12)].map((_, i) => {
+              const val = String(i + 1).padStart(2, '0');
+              return <option key={val} value={val}>{val}</option>;
+            })}
+          </select>
+
+          <select value={minute} onChange={(e) => setMinute(e.target.value)} required>
+            <option value="">MM</option>
+            {[0, 15, 30, 45].map((min) => {
+              const val = String(min).padStart(2, '0');
+              return <option key={val} value={val}>{val}</option>;
+            })}
+          </select>
+
+          <select value={ampm} onChange={(e) => setAmpm(e.target.value)} required>
+            <option value="">AM/PM</option>
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
 
         <select
           name="mode"

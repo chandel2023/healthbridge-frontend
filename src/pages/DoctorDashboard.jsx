@@ -22,9 +22,21 @@ const DoctorDashboard = () => {
       await axios.patch(`http://localhost:5000/api/appointments/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchAppointments(); // refresh list after status update
+      fetchAppointments(); // refresh after update
     } catch (err) {
       console.error('Error updating status:', err.message);
+    }
+  };
+
+  const deleteAppointment = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/appointments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchAppointments(); // refresh after delete
+    } catch (err) {
+      console.error('Error deleting appointment:', err.message);
     }
   };
 
@@ -47,7 +59,7 @@ const DoctorDashboard = () => {
               <th>Time</th>
               <th>Mode</th>
               <th>Status</th>
-              <th>Actions</th> {/* 👈 Important */}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -60,17 +72,15 @@ const DoctorDashboard = () => {
                 <td>{appt.mode}</td>
                 <td>{appt.status}</td>
                 <td>
-                  {appt.status === 'pending' && (
-                    <>
-                      <button onClick={() => updateStatus(appt._id, 'approved')} style={{ marginRight: '5px' }}>
-                        Approve
-                      </button>
-                      <button onClick={() => updateStatus(appt._id, 'cancelled')}>
-                        Cancel
-                      </button>
-                    </>
-                  )}
-                  {appt.status !== 'pending' && <span>-</span>}
+                  <button onClick={() => updateStatus(appt._id, 'approved')} style={{ marginRight: '5px' }}>
+                    Approve
+                  </button>
+                  <button onClick={() => updateStatus(appt._id, 'cancelled')} style={{ marginRight: '5px' }}>
+                    Cancel
+                  </button>
+                  <button onClick={() => deleteAppointment(appt._id)} style={{ backgroundColor: '#e11d48', color: '#fff' }}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

@@ -57,8 +57,13 @@ const Login = () => {
           boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
           width: "100%",
           maxWidth: "400px",
+          display: "flex",
+          flexDirection: "column",
+          boxSizing: "border-box",
+
         }}
       >
+
         <h2
           style={{
             textAlign: "center",
@@ -76,9 +81,26 @@ const Login = () => {
           </p>
         )}
 
-        <form onSubmit={handleLogin}>
+        <form
+          onSubmit={handleLogin}
+          autoComplete="off"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+
+          {/* 🛡 Trick: Invisible inputs to fool browser autofill */}
+          <input type="text" name="fake-username" autoComplete="off" style={{ display: "none" }} />
+          <input type="password" name="fake-password" autoComplete="new-password" style={{ display: "none" }} />
+
+
           <input
-            type="email"
+            type="text" // 🔥 yes, type "text" instead of "email"
+            name="real-email"
+            inputMode="email"
+            autoComplete="off"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -95,6 +117,8 @@ const Login = () => {
 
           <input
             type="password"
+            name="real-password"
+            autoComplete="new-password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -121,7 +145,9 @@ const Login = () => {
               fontWeight: "bold",
               border: "none",
               cursor: "pointer",
+
             }}
+
           >
             Login
           </button>
