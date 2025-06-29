@@ -7,7 +7,7 @@ const PatientDashboard = () => {
     const fetchAppointments = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/appointments/patient', {
+            const res = await axios.get('http://healthbridge-backend-mmfn.onrender.com/api/appointments/patient', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAppointments(res.data);

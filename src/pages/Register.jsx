@@ -13,7 +13,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('http://healthbridge-backend-mmfn.onrender.com/api/auth/register', {
         name,
         role,
         email,
